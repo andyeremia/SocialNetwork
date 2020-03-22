@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity"
+    android:background="@drawable/login"
+    >
+
+    <ImageView
+        android:id="@+id/imageViewRegisterLogo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/logo"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="10dp"/>
+    <EditText
+        android:id="@+id/editTextRegisterEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:hint="Email..."
+        android:layout_below="@+id/imageViewRegisterLogo"
+        android:background="@drawable/inputs"
+        android:padding="10dp"
+        android:drawableStart="@drawable/email"
+        android:layout_marginTop="5dp"
+        />
+    <EditText
+        android:id="@+id/editTextRegisterPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Password..."
+        android:layout_below="@+id/editTextRegisterEmail"
+        android:background="@drawable/inputs"
+        android:padding="10dp"
+        android:drawableStart="@drawable/password"
+        android:layout_marginTop="5dp"/>
+    <EditText
+        android:id="@+id/editTextRegisterConfirmPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Confirm password..."
+        android:layout_below="@id/editTextRegisterPass"
+        android:background="@drawable/inputs"
+        android:padding="10dp"
+        android:drawableStart="@drawable/password"
+        android:layout_marginTop="5dp"/>
+    <Button
+        android:id="@+id/buttonRegisterCreateAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create account"
+        android:layout_below="@+id/editTextRegisterConfirmPass"
+        android:background="@drawable/button"
+        android:padding="15dp"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        android:textColor="@android:color/background_light"
+        android:textStyle="bold"/>
+</RelativeLayout>
