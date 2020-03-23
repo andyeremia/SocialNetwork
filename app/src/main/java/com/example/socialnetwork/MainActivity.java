@@ -102,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_logout:
-                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+                mAuth.signOut();    //signing out the user from the Firebase Authentication
+                sendUserToLoginActivity();
                 break;
         }
     }
