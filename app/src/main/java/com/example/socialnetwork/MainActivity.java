@@ -15,6 +15,11 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference databaseReferenceUser;    //reference to the Firebase Database used to check the user existence
 
 
     @Override
@@ -33,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+        databaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");   //
 
         mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);   //adding the Toolbar to
         setSupportActionBar(mToolbar);                          //the MainActivity
@@ -60,11 +67,38 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();  //the firebase user
         if(currentUser == null){        //check if user is/isn't authenticated
             sendUserToLoginActivity();  //if not -> method to send the user to LoginActivity
+        } else{
+            checkUserExistence();
         }
     }
+
+    private void checkUserExistence() {
+        final String currentUserId = mAuth.getCurrentUser().getUid();  //the id of the user who will be online
+        databaseReferenceUser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.hasChild(currentUserId)){      //if the user is authenticated but has no information in the
+                    sendUserToSetupActivity();                  // Firebase Realtime Database, redirect the user to SetupActivity
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void sendUserToSetupActivity() {
+        Intent setupIntent = new Intent (MainActivity.this, SetupActivity.class);
+        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(setupIntent);
+        finish();
+    }
+
 
     private void sendUserToLoginActivity() {    //method to send user to the LoginActivity
         Intent loginIntent = new Intent (MainActivity.this, LoginActivity.class);
