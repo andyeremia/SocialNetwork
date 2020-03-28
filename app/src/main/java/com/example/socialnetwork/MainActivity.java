@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +22,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.util.Objects;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,10 +34,15 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private RecyclerView postList;
-    private Toolbar mToolbar;
+    private Toolbar toolbarMain;
+
+    private CircleImageView circleImageViewNavProfileImage;
+    private TextView textViewNavProfileUsername;
+    private ImageButton imageButtonAddNewPost;
 
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReferenceUser;    //reference to the Firebase Database used to check the user existence
+    String currentUserId;
 
 
     @Override
@@ -39,11 +51,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+        try{
+            currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+        } catch (Exception e){
+            sendUserToLoginActivity();
+        }
+
         databaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");   //
 
-        mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);   //adding the Toolbar to
-        setSupportActionBar(mToolbar);                          //the MainActivity
+        toolbarMain = (Toolbar) findViewById(R.id.main_page_toolbar);   //adding the Toolbar to
+        setSupportActionBar(toolbarMain);                          //the MainActivity
         getSupportActionBar().setTitle("Home");
+
+        imageButtonAddNewPost = (ImageButton) findViewById(R.id.imageButtonMainPost);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawable_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
@@ -51,8 +71,34 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();                      //
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);  //
         navigationView =(NavigationView) findViewById(R.id.navigation_view);
-        View navView = navigationView.inflateHeaderView(R.layout.navigation_header);    //adding the navigation header to navigation menu
 
+        View navView = navigationView.inflateHeaderView(R.layout.navigation_header);    //adding the navigation header to navigation menu
+        circleImageViewNavProfileImage = (CircleImageView) navView.findViewById(R.id.circleImageViewNavHeaderProfileImage);
+        textViewNavProfileUsername = (TextView) navView.findViewById(R.id.textViewNavHeaderUsername);
+
+        //displaying the username and the profile picture of the user in the NavigationHeader
+        databaseReferenceUser.child(currentUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    if(dataSnapshot.hasChild("full name")){
+                        String usernameLink = dataSnapshot.child("full name").getValue().toString();
+                        textViewNavProfileUsername.setText(usernameLink);
+                    }
+                    if(dataSnapshot.hasChild("profile image")){
+                        String imageLink = dataSnapshot.child("profile image").getValue().toString();
+                        Picasso.get().load(imageLink).placeholder(R.drawable.profile).into(circleImageViewNavProfileImage);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Profile name doesn't exist!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -62,6 +108,18 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        imageButtonAddNewPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendUserToPostActivity();
+            }
+        });
+    }
+
+    private void sendUserToPostActivity() {
+        Intent postIntent = new Intent (MainActivity.this, PostActivity.class);
+        startActivity(postIntent);
     }
 
     @Override
@@ -117,6 +175,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void userMenuSelector(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_post:
+                sendUserToPostActivity();
+                break;
             case R.id.nav_profile:
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 break;

@@ -6,7 +6,7 @@
     android:background="@drawable/header">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/nav_profile_image"
+        android:id="@+id/circleImageViewNavHeaderProfileImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/profile"
@@ -16,14 +16,15 @@
         android:layout_marginTop="7dp"
         />
     <TextView
-        android:id="@+id/nav_user_full_name"
+        android:id="@+id/textViewNavHeaderUsername"
         android:layout_width="135dp"
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:text="username"
         android:textColor="@android:color/background_light"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/circleImageViewNavHeaderProfileImage"
         android:textAlignment="center"
         />
 
