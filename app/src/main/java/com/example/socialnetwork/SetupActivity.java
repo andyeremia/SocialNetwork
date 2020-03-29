@@ -95,8 +95,8 @@ public class SetupActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    if(dataSnapshot.hasChild("profile image")){
-                        String imageLink = dataSnapshot.child("profile image").getValue().toString();
+                    if(dataSnapshot.hasChild("profileimage")){
+                        String imageLink = dataSnapshot.child("profileimage").getValue().toString();
                         Picasso.get().load(imageLink).placeholder(R.drawable.profile).into(circleImageViewProfileImage);
                     } else{
                         Toast.makeText(SetupActivity.this, "Please select profile image first", Toast.LENGTH_SHORT).show();
@@ -151,7 +151,7 @@ public class SetupActivity extends AppCompatActivity {
                                 //to the user profile information
 
                                 final String downloadUrl = uri.toString();
-                                databaseReferenceUser.child("profile image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                databaseReferenceUser.child("profileimage").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
@@ -201,12 +201,12 @@ public class SetupActivity extends AppCompatActivity {
 
             HashMap hashMapUser = new HashMap();
             hashMapUser.put("username", getUsername);
-            hashMapUser.put("full name", getFullName);
+            hashMapUser.put("fullname", getFullName);
             hashMapUser.put("country", getCountry);
             hashMapUser.put("status", "Hey there!");
             hashMapUser.put("gender", "none");
             hashMapUser.put("dob", "none");
-            hashMapUser.put("relationship status", "none");
+            hashMapUser.put("relationshipstatus", "none");
             databaseReferenceUser.updateChildren(hashMapUser).addOnCompleteListener(new OnCompleteListener() {
                 @Override
                 public void onComplete(@NonNull Task task) {

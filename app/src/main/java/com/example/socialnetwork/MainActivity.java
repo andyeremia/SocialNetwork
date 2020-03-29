@@ -5,15 +5,22 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -33,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private RecyclerView postList;
+    private RecyclerView recyclerViewPostList;
     private Toolbar toolbarMain;
 
     private CircleImageView circleImageViewNavProfileImage;
@@ -42,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReferenceUser;    //reference to the Firebase Database used to check the user existence
+    private DatabaseReference databaseReferencePost;
     String currentUserId;
 
 
@@ -57,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
             sendUserToLoginActivity();
         }
 
-        databaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");   //
+        databaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");
+        databaseReferencePost = FirebaseDatabase.getInstance().getReference().child("Posts");
 
         toolbarMain = (Toolbar) findViewById(R.id.main_page_toolbar);   //adding the Toolbar to
         setSupportActionBar(toolbarMain);                          //the MainActivity
@@ -72,6 +83,15 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);  //
         navigationView =(NavigationView) findViewById(R.id.navigation_view);
 
+        //displaying the content of the RecyclerView in the MainActivity
+
+        recyclerViewPostList = (RecyclerView) findViewById(R.id.all_users_post_list);
+        recyclerViewPostList.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerViewPostList.setLayoutManager(linearLayoutManager);
+
         View navView = navigationView.inflateHeaderView(R.layout.navigation_header);    //adding the navigation header to navigation menu
         circleImageViewNavProfileImage = (CircleImageView) navView.findViewById(R.id.circleImageViewNavHeaderProfileImage);
         textViewNavProfileUsername = (TextView) navView.findViewById(R.id.textViewNavHeaderUsername);
@@ -81,12 +101,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    if(dataSnapshot.hasChild("full name")){
-                        String usernameLink = dataSnapshot.child("full name").getValue().toString();
+                    if(dataSnapshot.hasChild("fullname")){
+                        String usernameLink = dataSnapshot.child("fullname").getValue().toString();
                         textViewNavProfileUsername.setText(usernameLink);
                     }
-                    if(dataSnapshot.hasChild("profile image")){
-                        String imageLink = dataSnapshot.child("profile image").getValue().toString();
+                    if(dataSnapshot.hasChild("profileimage")){
+                        String imageLink = dataSnapshot.child("profileimage").getValue().toString();
                         Picasso.get().load(imageLink).placeholder(R.drawable.profile).into(circleImageViewNavProfileImage);
                     } else {
                         Toast.makeText(MainActivity.this, "Profile name doesn't exist!", Toast.LENGTH_SHORT).show();
@@ -115,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 sendUserToPostActivity();
             }
         });
+
     }
 
     private void sendUserToPostActivity() {
@@ -130,6 +151,53 @@ public class MainActivity extends AppCompatActivity {
             sendUserToLoginActivity();  //if not -> method to send the user to LoginActivity
         } else{
             checkUserExistence();
+        }
+
+        //displaying the posts from the PostActivity to the MainActivity using the RecyclerView
+        //and FirebaseRecyclerAdapter
+
+        FirebaseRecyclerOptions<Posts> options =
+                new FirebaseRecyclerOptions.Builder<Posts>()
+                .setQuery(databaseReferencePost, Posts.class)
+                .build();
+
+        FirebaseRecyclerAdapter<Posts, PostsViewHolder> firebaseRecyclerAdapter =
+                new FirebaseRecyclerAdapter<Posts, PostsViewHolder>(options) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull PostsViewHolder holder, int position, @NonNull Posts model) {
+                        holder.textViewPostUsername.setText(model.getFullName());
+                        holder.textViewPostTime.setText(model.getTime());
+                        holder.textViewPostDate.setText(model.getDate());
+                        holder.textViewPostDescription.setText(model.getDescription());
+                        Picasso.get().load(model.getProfileImage()).into(holder.circleImageViewPostProfilePicture);
+                        Picasso.get().load(model.getPostImage()).into(holder.imageViewPostImage);
+                    }
+
+                    @NonNull
+                    @Override
+                    public PostsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.all_posts_layout, parent, false);
+                        PostsViewHolder postsViewHolder = new PostsViewHolder(view);
+                        return postsViewHolder;
+                    }
+                };
+        recyclerViewPostList.setAdapter(firebaseRecyclerAdapter);
+        firebaseRecyclerAdapter.startListening();
+    }
+
+    public static class PostsViewHolder extends RecyclerView.ViewHolder{
+        CircleImageView circleImageViewPostProfilePicture;
+        TextView textViewPostUsername, textViewPostDate, textViewPostTime, textViewPostDescription;
+        ImageView imageViewPostImage;
+
+        public PostsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            circleImageViewPostProfilePicture = (CircleImageView) itemView.findViewById(R.id.circleImageViewPostProfileImage);
+            textViewPostUsername = (TextView) itemView.findViewById(R.id.textViewPostUsername);
+            textViewPostDate = (TextView) itemView.findViewById(R.id.textViewPostDate);
+            textViewPostTime = (TextView) itemView.findViewById(R.id.textViewPostTime);
+            textViewPostDescription = (TextView) itemView.findViewById(R.id.textViewPostPostDescription);
+            imageViewPostImage = (ImageView) itemView.findViewById(R.id.imageViewPostPostImage);
         }
     }
 
