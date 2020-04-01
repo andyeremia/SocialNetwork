@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/register"
+    tools:context=".ClickPostActivity">
+
+    <ImageView
+        android:id="@+id/imageViewClickPostImage"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/select_image"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:id="@+id/textViewClickPostDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/inputs"
+        android:inputType="textMultiLine"
+        android:textSize="18sp"
+        android:layout_below="@id/imageViewClickPostImage"
+        android:textColor="@android:color/black"
+        android:padding="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="Post Description"/>
+
+    <Button
+        android:id="@+id/buttonClickPostDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:textColor="@android:color/background_light"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginTop="490dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="Delete Post"/>
+
+    <Button
+        android:id="@+id/buttonClickPostEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonClickPostDelete"
+        android:background="@drawable/button"
+        android:textColor="@android:color/background_light"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="Edit Post"/>
+
+
+
+</RelativeLayout>

@@ -165,12 +165,25 @@ public class MainActivity extends AppCompatActivity {
                 new FirebaseRecyclerAdapter<Posts, PostsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull PostsViewHolder holder, int position, @NonNull Posts model) {
+
+                        final String postKey = getRef(position).getKey();
+
                         holder.textViewPostUsername.setText(model.getFullName());
                         holder.textViewPostTime.setText(model.getTime());
                         holder.textViewPostDate.setText(model.getDate());
                         holder.textViewPostDescription.setText(model.getDescription());
                         Picasso.get().load(model.getProfileImage()).into(holder.circleImageViewPostProfilePicture);
                         Picasso.get().load(model.getPostImage()).into(holder.imageViewPostImage);
+
+                        //saving the post unique key for later edit/delete
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent clickPostIntent = new Intent (MainActivity.this, ClickPostActivity.class);
+                                clickPostIntent.putExtra("postKey", postKey);
+                                startActivity(clickPostIntent);
+                            }
+                        });
                     }
 
                     @NonNull

@@ -91,10 +91,10 @@
             android:layout_width="125dp"
             android:layout_height="105dp"
             android:src="@drawable/twitter"/>
-        <ImageView
-            android:id="@+id/imageViewLoginGoogle"
-            android:layout_width="90dp"
-            android:layout_height="75dp"
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/signInButtonLoginGoogle"
+            android:layout_width="110dp"
+            android:layout_height="85dp"
             android:src="@drawable/google"/>
     </LinearLayout>
 
