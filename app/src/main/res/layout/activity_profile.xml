@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorProfile"
+    tools:context=".ProfileActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/circleImageViewProfileProfileImage"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/profile"
+                />
+
+            <TextView
+                android:id="@+id/textViewProfileProfileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Profile name"
+                android:layout_below="@+id/circleImageViewProfileProfileImage"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@android:color/background_light"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/textViewProfileProfileUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:layout_below="@+id/textViewProfileProfileName"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@android:color/background_light"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:id="@+id/textViewProfileProfileStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="HEY THERE! I'M USING THIS EXTRAORDINARY NEW SOCIAL APP BY ANDREI EREMIA!"
+                android:layout_below="@+id/textViewProfileProfileUsername"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="18sp"
+                android:layout_marginTop="5dp"
+                />
+
+            <TextView
+                android:id="@+id/textViewProfileProfileCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="My country"
+                android:layout_below="@+id/textViewProfileProfileStatus"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginTop="100dp"
+                />
+
+            <TextView
+                android:id="@+id/textViewProfileProfileDOB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DOB"
+                android:layout_below="@+id/textViewProfileProfileCountry"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginTop="2dp"
+                />
+
+            <TextView
+                android:id="@+id/textViewProfileProfileGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="My gender"
+                android:layout_below="@+id/textViewProfileProfileDOB"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginTop="2dp"
+                />
+
+            <TextView
+                android:id="@+id/textViewProfileProfileRelationshipStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Relationship status"
+                android:layout_below="@+id/textViewProfileProfileGender"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:layout_marginTop="2dp"
+                />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

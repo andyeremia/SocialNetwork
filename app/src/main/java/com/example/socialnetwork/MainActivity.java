@@ -246,6 +246,16 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private void sendUserToSettingsActivity() {    //method to send user to the LoginActivity
+        Intent loginIntent = new Intent (MainActivity.this, SettingsActivity.class);
+        startActivity(loginIntent);
+    }
+
+    private void sendUserToProfileActivity() {    //method to send user to the LoginActivity
+        Intent loginIntent = new Intent (MainActivity.this, ProfileActivity.class);
+        startActivity(loginIntent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(actionBarDrawerToggle.onOptionsItemSelected(item)){
@@ -260,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
                 sendUserToPostActivity();
                 break;
             case R.id.nav_profile:
+                sendUserToProfileActivity();
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_home:
@@ -275,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Messages", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_settings:
+                sendUserToSettingsActivity();
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_logout:

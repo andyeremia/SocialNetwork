@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/register"
+    tools:context=".SettingsActivity">
+
+    <include android:id="@+id/toolbarSettings"
+        layout="@layout/app_bar_layout"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarSettings">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/circleImageViewSettingsProfileImage"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/profile"
+                />
+
+            <EditText
+                android:id="@+id/editTextSettingsStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/circleImageViewSettingsProfileImage"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:background="@drawable/inputs"
+                android:hint="Profile status"
+                android:padding="30dp"
+                android:textColor="@android:color/background_dark"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                />
+
+            <EditText
+                android:id="@+id/editTextSettingsUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editTextSettingsStatus"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/inputs"
+                android:hint="Username"
+                android:padding="10dp"
+                android:textColor="@android:color/background_dark"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginTop="50dp"
+                />
+
+            <EditText
+                android:id="@+id/editTextSettingsFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editTextSettingsUsername"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/inputs"
+                android:hint="Full name"
+                android:padding="10dp"
+                android:textColor="@android:color/background_dark"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                />
+
+            <EditText
+                android:id="@+id/editTextSettingsCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editTextSettingsFullName"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/inputs"
+                android:hint="Country"
+                android:padding="10dp"
+                android:textColor="@android:color/background_dark"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                />
+
+            <EditText
+                android:id="@+id/editTextSettingsDOB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editTextSettingsCountry"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/inputs"
+                android:hint="Date of birth"
+                android:padding="10dp"
+                android:textColor="@android:color/background_dark"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                />
+
+            <EditText
+                android:id="@+id/editTextSettingsGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editTextSettingsDOB"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/inputs"
+                android:hint="Gender"
+                android:padding="10dp"
+                android:textColor="@android:color/background_dark"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                />
+
+            <EditText
+                android:id="@+id/editTextSettingsRelationshipStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editTextSettingsGender"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/inputs"
+                android:hint="Relationship Status"
+                android:padding="10dp"
+                android:textColor="@android:color/background_dark"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                />
+
+            <Button
+                android:id="@+id/buttonSettingsUpdateAccount"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/editTextSettingsRelationshipStatus"
+                android:background="@drawable/button"
+                android:text="Update Info"
+                android:layout_margin="20dp"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
