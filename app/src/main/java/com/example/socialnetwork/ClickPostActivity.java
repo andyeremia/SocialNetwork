@@ -25,6 +25,8 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+
+// activity for the user to modify (delete/edit) his posts
 public class ClickPostActivity extends AppCompatActivity {
 
     private ImageView imageViewPostImage;

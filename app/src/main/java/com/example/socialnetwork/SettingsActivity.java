@@ -37,6 +37,11 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+
+// user can view and modify his profile settings
+// in majority this class shares the code of SetupActivity to change/update the user information
+// to the Firebase Realtime Database and to the Firebase Storage (for the profile images)
+// but also retrieves the user's existent data from the Firebase Realtime Database
 public class SettingsActivity extends AppCompatActivity {
 
     private Toolbar toolbarSettings;
@@ -82,6 +87,8 @@ public class SettingsActivity extends AppCompatActivity {
         buttonUpdateAccount = (Button) findViewById(R.id.buttonSettingsUpdateAccount);
         circleImageViewProfileImage = (CircleImageView) findViewById(R.id.circleImageViewSettingsProfileImage);
 
+
+        //gets the user's existent information from the Firebase Realtime Database
         databaseReferenceSettings.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -130,6 +137,8 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+
+    // puts the updated profile image in the Firebase Realtime Database and Firebase Storage
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -231,6 +240,8 @@ public class SettingsActivity extends AppCompatActivity {
             updateAccountInfo(status, username, fullname, country, dob, gender, relationshipStatus);
         }
     }
+
+    //puts the users updated information in the Firebase Realtime Database
 
     private void updateAccountInfo(String status, String username, String fullname, String country, String dob, String gender, String relationshipStatus) {
         HashMap hashMapUser = new HashMap();

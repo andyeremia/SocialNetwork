@@ -1,5 +1,7 @@
 package com.example.socialnetwork;
 
+
+// support class for retrieving the user information so that it can be displayed in the user's post
 public class Posts {
     private String userid, time, date, postimage, description, profileimage, fullname;
 

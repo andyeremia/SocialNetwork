@@ -18,6 +18,9 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+
+// user can see his own information retrieved from the Firebase Realtime Database
+// this class shares the same code as SettingsActivity.class in terms of retrieving the user information from the database
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView textViewStatus, textViewUsername, textViewFullName, textViewCountry, textViewDOB, textViewGender, textViewRelationshipStatus;

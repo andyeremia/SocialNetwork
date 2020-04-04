@@ -52,7 +52,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReferenceUser;    //reference to the Firebase Database used to check the user existence
     private DatabaseReference databaseReferencePost;
+    private DatabaseReference databaseReferenceLikes;
+
     String currentUserId;
+    Boolean likeChecker = false;
 
 
     @Override
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         databaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");
         databaseReferencePost = FirebaseDatabase.getInstance().getReference().child("Posts");
+        databaseReferenceLikes = FirebaseDatabase.getInstance().getReference().child("Likes");
 
         toolbarMain = (Toolbar) findViewById(R.id.main_page_toolbar);   //adding the Toolbar to
         setSupportActionBar(toolbarMain);                          //the MainActivity
@@ -175,6 +179,10 @@ public class MainActivity extends AppCompatActivity {
                         Picasso.get().load(model.getProfileImage()).into(holder.circleImageViewPostProfilePicture);
                         Picasso.get().load(model.getPostImage()).into(holder.imageViewPostImage);
 
+                        //method to determine if the like button is red/grey (like/unlike)
+                        //and modify button status accordingly
+                        holder.setLikeButtonStatus(postKey);
+
                         //saving the post unique key for later edit/delete
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -182,6 +190,46 @@ public class MainActivity extends AppCompatActivity {
                                 Intent clickPostIntent = new Intent (MainActivity.this, ClickPostActivity.class);
                                 clickPostIntent.putExtra("postKey", postKey);
                                 startActivity(clickPostIntent);
+                            }
+                        });
+
+                        //send user to the CommentsActivity when the user presses the comment button on a post
+                        holder.imageButtonPostComment.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent commentsIntent = new Intent (MainActivity.this, CommentsActivity.class);
+                                commentsIntent.putExtra("postKey", postKey);
+                                startActivity(commentsIntent);
+                            }
+                        });
+
+                        //add likes value into the Firebase Realtime Database
+                        holder.imageButtonPostLike.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                likeChecker = true;
+
+                                databaseReferenceLikes.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if(likeChecker.equals(true)){
+                                            //if the like already exists -> unlike (remove the id of the current user that liked the
+                                            //current post from the Likes node
+                                            if(dataSnapshot.child(postKey).hasChild(currentUserId)){
+                                                databaseReferenceLikes.child(postKey).child(currentUserId).removeValue();
+                                                likeChecker = false;
+                                            } else{
+                                                databaseReferenceLikes.child(postKey).child(currentUserId).setValue(true);
+                                                likeChecker = false;
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
                         });
                     }
@@ -200,8 +248,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static class PostsViewHolder extends RecyclerView.ViewHolder{
         CircleImageView circleImageViewPostProfilePicture;
-        TextView textViewPostUsername, textViewPostDate, textViewPostTime, textViewPostDescription;
+        TextView textViewPostUsername, textViewPostDate, textViewPostTime, textViewPostDescription, textViewPostLikeCounter;
         ImageView imageViewPostImage;
+        ImageButton imageButtonPostLike, imageButtonPostComment;
+        int countLikes;
+        String currentUserIdHolder;
+        DatabaseReference databaseReferenceLikesHolder;
 
         public PostsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -211,6 +263,38 @@ public class MainActivity extends AppCompatActivity {
             textViewPostTime = (TextView) itemView.findViewById(R.id.textViewPostTime);
             textViewPostDescription = (TextView) itemView.findViewById(R.id.textViewPostPostDescription);
             imageViewPostImage = (ImageView) itemView.findViewById(R.id.imageViewPostPostImage);
+
+            textViewPostLikeCounter = (TextView) itemView.findViewById(R.id.textViewPostLikeCounter);
+            imageButtonPostLike = (ImageButton) itemView.findViewById(R.id.imageButtonPostLike);
+            imageButtonPostComment = (ImageButton) itemView.findViewById(R.id.imageButtonPostComment);
+
+            databaseReferenceLikesHolder = FirebaseDatabase.getInstance().getReference().child("Likes");
+            currentUserIdHolder = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        }
+
+        public void setLikeButtonStatus(final String postKey){
+            databaseReferenceLikesHolder.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.child(postKey).hasChild(currentUserIdHolder)){
+                        //counts the number of likes on a single post
+                        countLikes = (int) dataSnapshot.child(postKey).getChildrenCount();
+                        imageButtonPostLike.setImageResource(R.drawable.like);
+                        textViewPostLikeCounter.setText(Integer.toString(countLikes) + " Likes");
+                    } else{
+                        //if the user unlikes the post
+                        countLikes = (int) dataSnapshot.child(postKey).getChildrenCount();
+                        imageButtonPostLike.setImageResource(R.drawable.dislike);
+                        textViewPostLikeCounter.setText(Integer.toString(countLikes) + " Likes");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
@@ -246,14 +330,20 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    private void sendUserToSettingsActivity() {    //method to send user to the LoginActivity
-        Intent loginIntent = new Intent (MainActivity.this, SettingsActivity.class);
-        startActivity(loginIntent);
+    private void sendUserToSettingsActivity() {
+        Intent settingsIntent = new Intent (MainActivity.this, SettingsActivity.class);
+        startActivity(settingsIntent);
     }
 
-    private void sendUserToProfileActivity() {    //method to send user to the LoginActivity
-        Intent loginIntent = new Intent (MainActivity.this, ProfileActivity.class);
-        startActivity(loginIntent);
+    private void sendUserToProfileActivity() {
+        Intent profileIntent = new Intent (MainActivity.this, ProfileActivity.class);
+        startActivity(profileIntent);
+    }
+
+
+    private void sendUserToFindFriendsActivity() {
+        Intent findFriendsIntent = new Intent (MainActivity.this, FindFriendsActivity.class);
+        startActivity(findFriendsIntent);
     }
 
     @Override
@@ -280,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Friend List", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_find_friends:
+                sendUserToFindFriendsActivity();
                 Toast.makeText(this, "Find Friends", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_messages:
@@ -295,4 +386,5 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
 }
